@@ -1,114 +1,230 @@
- Project Overview
+# Brain MRI Preprocessing Pipeline for Alzheimer’s Disease Classification
 
-This project focuses on preprocessing brain MRI scans for an Alzheimer’s Disease classification task as part of a hackathon.
-The goal of this stage is to convert raw DICOM MRI images into clean, model-ready datasets that can be directly used for deep learning models such as VGG16.
+## Project Overview
 
-The pipeline handles:
+This project implements a complete preprocessing pipeline for brain MRI scans as part of an Alzheimer’s Disease classification hackathon.
 
-Reading raw MRI DICOM files
+The objective is to convert raw MRI DICOM scans into clean, structured, and model-ready datasets suitable for deep learning architectures such as VGG16, ResNet, and other CNN-based models.
 
-Matching MRI scans with clinical metadata
+This pipeline ensures that MRI data is properly matched with clinical metadata, transformed into consistent image format, labeled correctly, and split into training, validation, and testing sets.
 
-Image preprocessing for CNN compatibility
+---
 
-Label encoding
+## Features
 
-Train / Validation / Test splitting
+The preprocessing pipeline performs the following operations:
 
-Saving processed datasets for future model training
+- Reads raw MRI DICOM files  
+- Matches MRI scans with clinical metadata  
+- Converts MRI slices into CNN-compatible format  
+- Encodes diagnosis labels  
+- Performs stratified train/validation/test split  
+- Saves processed datasets for reproducible model training  
 
+---
 
- Metadata Description
+## Dataset Structure
 
-The metadata CSV file (MRI_metadata.csv) contains:
+After cloning the repository, the dataset must be reconstructed from split parts.
 
-Subject → Unique subject ID (matches MRI folder name)
+```
+mri-project/
+│
+├── preprocess.py
+├── requirements.txt
+├── reconstruct_dataset.sh
+├── README.md
+│
+└── dataset/
+    ├── X_train_part_aa
+    ├── X_train_part_ab
+    ├── ...
+    ├── y_train_part_aa
+    ├── ...
+```
 
-Group → Diagnosis label
+---
 
-CN → Cognitively Normal
+## Setup Instructions
 
-MCI → Mild Cognitive Impairment
+### Step 1: Clone repository
 
-AD → Alzheimer’s Disease
+```
+git clone <your-repository-url>
+cd mri-project
+```
 
+### Step 2: Install dependencies
 
+```
+pip install -r requirements.txt
+```
 
+### Step 3: Reconstruct dataset
 
-Preprocessing Steps Performed
- DICOM Image Loading
+```
+chmod +x reconstruct_dataset.sh
+./reconstruct_dataset.sh
+```
 
-All .dcm files are recursively loaded using pydicom
+This will generate:
 
-Pixel arrays are extracted from raw MRI scans
+```
+dataset/X_train.npy
+dataset/X_val.npy
+dataset/X_test.npy
+dataset/y_train.npy
+dataset/y_val.npy
+dataset/y_test.npy
+```
 
- Image Transformation
+---
 
-Each MRI slice undergoes the following transformations:
+## Metadata Description
 
-Resized to 224 × 224
+The metadata file (`MRI_metadata.csv`) contains:
 
-Converted from grayscale to RGB
+| Column | Description |
+|------|-------------|
+| Subject | Unique subject ID matching MRI folder name |
+| Group | Diagnosis label |
 
-Normalized using VGG16 preprocessing
+Diagnosis classes:
 
-Converted into NumPy arrays
+- CN → Cognitively Normal  
+- MCI → Mild Cognitive Impairment  
+- AD → Alzheimer’s Disease  
+
+---
+
+## Preprocessing Steps
+
+### 1. DICOM Image Loading
+
+- Reads `.dcm` files using pydicom  
+- Extracts pixel arrays from MRI slices  
+
+### 2. Image Transformation
+
+Each MRI slice is:
+
+- Resized to 224 × 224  
+- Converted from grayscale to RGB  
+- Normalized using VGG16 preprocessing  
+- Converted to NumPy array format  
 
 This ensures compatibility with pretrained CNN architectures.
 
- Data–Metadata Matching
+---
 
-MRI folders are cross-checked with the metadata CSV
+### 3. Metadata Matching
 
-Only valid subjects with known diagnosis labels are processed
+- MRI scans are matched with metadata entries  
+- Only valid labeled subjects are included  
+- Ensures accurate labeling and dataset integrity  
 
-Ensures data integrity and correct labeling
+---
 
- Dataset Creation
+### 4. Dataset Creation
 
-Preprocessed images stored in feature array X
+- Feature array stored in:
 
-Corresponding diagnosis labels stored in y
+```
+X → MRI image tensors
+```
 
- Stratified Data Splitting
+- Label array stored in:
 
-To maintain class balance, the dataset is split using stratified sampling:
+```
+y → diagnosis labels
+```
 
-Split	Percentage
-Training	70%
-Validation	15%
-Testing	15%
- Saving Processed Data
+---
 
-Final datasets are saved as .npy files:
+### 5. Stratified Data Splitting
 
-X_train.npy, y_train.npy
+Dataset split using stratified sampling:
 
-X_val.npy, y_val.npy
+| Split | Percentage |
+|------|------------|
+| Training | 70% |
+| Validation | 15% |
+| Testing | 15% |
 
-X_test.npy, y_test.npy
+Ensures balanced class distribution.
 
-These files can be directly loaded during model training.
+---
 
+### 6. Saving Processed Dataset
 
- Libraries Used
+Processed datasets saved as:
 
-Python
+```
+dataset/X_train.npy
+dataset/X_val.npy
+dataset/X_test.npy
 
-NumPy
+dataset/y_train.npy
+dataset/y_val.npy
+dataset/y_test.npy
+```
 
-Pandas
+These can be directly used for deep learning model training.
 
-TensorFlow / Keras
+---
 
-pydicom
+## Running the Preprocessing Pipeline
 
-scikit-learn
+```
+python preprocess.py
+```
 
- Current Status
+---
 
- Raw MRI DICOM data successfully processed
- Images converted to CNN-ready format
- Labels encoded and validated
- Train / Validation / Test datasets created
- Data saved for future modeling
+## Libraries Used
+
+- Python  
+- NumPy  
+- Pandas  
+- TensorFlow / Keras  
+- pydicom  
+- scikit-learn  
+- tqdm  
+
+---
+
+## Current Status
+
+- MRI DICOM scans successfully processed  
+- Images converted to CNN-compatible format  
+- Labels encoded and validated  
+- Stratified train / validation / test splits created  
+- Dataset saved in reusable NumPy format  
+- Fully reproducible pipeline  
+
+---
+
+## Reproducibility
+
+Anyone can reproduce the dataset using:
+
+```
+git clone <repo>
+cd mri-project
+pip install -r requirements.txt
+./reconstruct_dataset.sh
+python preprocess.py
+```
+
+---
+
+## Hackathon Compliance
+
+This repository contains:
+
+- Full preprocessing pipeline  
+- Dataset reconstruction script  
+- Requirements file for environment setup  
+- Reproducible dataset structure  
+
+Fully compliant with hackathon submission requirements.

@@ -1,0 +1,4 @@
+dataset/
+*.npy
+*.part_*
+

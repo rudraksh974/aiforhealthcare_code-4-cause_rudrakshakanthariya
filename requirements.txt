@@ -1,0 +1,6 @@
+numpy
+pandas
+tensorflow
+pydicom
+scikit-learn
+tqdm
