@@ -1,4 +1,4 @@
-<!-- Project Overview
+ Project Overview
 
 This project focuses on preprocessing brain MRI scans for an Alzheimer’s Disease classification task as part of a hackathon.
 The goal of this stage is to convert raw DICOM MRI images into clean, model-ready datasets that can be directly used for deep learning models such as VGG16.
@@ -111,4 +111,4 @@ scikit-learn
  Images converted to CNN-ready format
  Labels encoded and validated
  Train / Validation / Test datasets created
- Data saved for future modeling -->
+ Data saved for future modeling
